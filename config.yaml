@@ -1,0 +1,9 @@
+jobs:
+  - name: example_local
+    url: "file:///C:/Users/navee/pyscrape-ops/tests/sample_page.html"
+    output_csv: "outputs/example_local.csv"
+    selectors:
+      item: "article"
+      title: "h2"
+      summary: "p.summary"
+    rate_limit_seconds: 0.5
