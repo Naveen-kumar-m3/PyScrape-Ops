@@ -1,4 +1,5 @@
 # pyscrape_ops/scraper.py
+
 from typing import List, Dict, Optional
 import time
 import requests
@@ -6,12 +7,14 @@ from bs4 import BeautifulSoup
 from urllib import robotparser
 from urllib.parse import urljoin, urlparse
 
+
 DEFAULT_HEADERS = {
-    "User-Agent": "PyScrape-Ops/0.1 (+https://github.com/yourname/pyscrape-ops)"
+    "User-Agent": "PyScrape-Ops/0.1 (+https://github.com/Naveen-Kumar-m3/pyscrape-ops)"
 }
 
+
 class Scraper:
-    def __init__(self, headers: Optional[Dict[str,str]] = None, timeout: int = 10):
+    def __init__(self, headers: Optional[Dict[str, str]] = None, timeout: int = 10):
         self.headers = headers or DEFAULT_HEADERS
         self.timeout = timeout
 
@@ -26,39 +29,61 @@ class Scraper:
 
     def fetch(self, url: str) -> str:
         parsed = urlparse(url)
+
+        # Local file support
         if parsed.scheme == "file":
             path = parsed.path
             if path.startswith("/") and len(path) > 2 and path[2] == ":":
                 path = path.lstrip("/")
             with open(path, "r", encoding="utf-8") as f:
                 return f.read()
-        resp = requests.get(url, headers=self.headers, timeout=self.timeout)
-        resp.raise_for_status()
-        return resp.text
 
-    def parse_list(self, html: str, selectors: Dict[str,str]) -> List[Dict[str,str]]:
+        # HTTP / HTTPS request
+        response = requests.get(
+            url,
+            headers=self.headers,
+            timeout=self.timeout
+        )
+        response.raise_for_status()
+        return response.text
+
+    def parse_list(self, html: str, selectors: Dict[str, str]) -> List[Dict[str, str]]:
         soup = BeautifulSoup(html, "html.parser")
-        items = []
-        item_sel = selectors.get("item", "")
-        if not item_sel:
+        items: List[Dict[str, str]] = []
+
+        item_selector = selectors.get("item")
+        if not item_selector:
             return items
-        for el in soup.select(item_sel):
-            record = {}
-            for key, sel in selectors.items():
+
+        for element in soup.select(item_selector):
+            record: Dict[str, str] = {}
+            for key, selector in selectors.items():
                 if key == "item":
                     continue
-                sub = el.select_one(sel)
-                record[key] = sub.get_text(strip=True) if sub else ""
+                found = element.select_one(selector)
+                record[key] = found.get_text(strip=True) if found else ""
             items.append(record)
+
         return items
 
-    def scrape_job(self, url: str, selectors: Dict[str,str], rate_limit_seconds: float = 1.0):
-        base = "{0.scheme}://{0.netloc}".format(urlparse(url))
-        if urlparse(url).scheme in ("http","https"):
-            if not self.can_fetch(base, urlparse(url).path):
+    def scrape_job(
+        self,
+        url: str,
+        selectors: Dict[str, str],
+        rate_limit_seconds: float = 1.0,
+    ) -> List[Dict[str, str]]:
+
+        parsed = urlparse(url)
+        base = f"{parsed.scheme}://{parsed.netloc}"
+
+        if parsed.scheme in ("http", "https"):
+            if not self.can_fetch(base, parsed.path):
                 raise PermissionError(f"Robots.txt disallows scraping {url}")
+
         html = self.fetch(url)
-        items = self.parse_list(html, selectors)
-        if urlparse(url).scheme in ("http","https"):
+        results = self.parse_list(html, selectors)
+
+        if parsed.scheme in ("http", "https"):
             time.sleep(rate_limit_seconds)
-        return items
+
+        return results
