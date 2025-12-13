@@ -32,10 +32,9 @@ web scraping, and user-focused application design.
 
 ## 📸 Screenshots
 
-> _(Add screenshots of the UI here for better visibility)_  
-> Recommended:
-> - Home screen with URL input  
-> - Data preview + download button  
+<img width="1840" height="909" alt="image" src="https://github.com/user-attachments/assets/6f206632-2065-4a0d-b695-9af2c3199a82" />
+ <img width="1008" height="843" alt="image" src="https://github.com/user-attachments/assets/0d6b966c-b7e7-4556-b96d-b86dd734e483" />
+
 
 ---
 
@@ -51,4 +50,52 @@ web scraping, and user-focused application design.
 ---
 
 ## 📂 Project Structure
+pyscrape-ops/
+│
+├── app.py # Streamlit web application
+├── pyscrape_ops/
+│ ├── scraper.py # Web scraping logic
+│ ├── processor.py # Data processing
+│ └── exporter.py # Excel export
+│
+├── outputs/ # Generated Excel files
+├── requirements.txt
+└── README.md
+
+
+---
+
+## ▶️ Run Locally
+
+```bash
+# Clone the repository
+git clone https://github.com/Naveen-Kumar-m3/pyscrape-ops.git
+cd pyscrape-ops
+
+# Create and activate virtual environment
+python -m venv .venv
+.venv\Scripts\activate   # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the web application
+python -m streamlit run app.py
+
+🎯 Use Cases
+
+Quick data extraction from public websites
+
+Exporting website content for analysis
+
+Learning real-world web scraping workflows
+
+Demonstrating Python automation skills
+
+
+👤 Author
+
+Naveen Kumar
+GitHub: https://github.com/Naveen-Kumar-m3
+
 
