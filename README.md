@@ -65,7 +65,7 @@ pyscrape-ops/
 
 ---
 
-## ▶️ Run Locally
+##  Run Locally
 
 ```bash
 # Clone the repository
@@ -82,7 +82,7 @@ pip install -r requirements.txt
 # Run the web application
 python -m streamlit run app.py
 
-🎯 Use Cases
+ Use Cases
 
 Quick data extraction from public websites
 
