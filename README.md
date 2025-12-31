@@ -19,7 +19,7 @@ web scraping, and user-focused application design.
 - 🌙 Modern dark theme UI
 - 🧩 Modular and extensible backend design
 
----
+--
 
 ## 🖥️ Live Demo
 
